@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get API data</title>
+    <style>
+
+        body { margin: 50px; }
+        #getData {
+            padding: 7px 10px;
+            background-color: orange;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            border-radius: 3px;
+            box-shadow: none;
+            transition: box-shadow 0.18s ease-in-out;
+        }
+        #getData:hover { box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.33); }
+        #getData:focus {outline:0;}
+        #getData:active { box-shadow:none; }
+        #response { list-style-type: none; margin: 20px 0px; padding: 0; }
+        #response li { padding: 10px 0px; }
+        #response li:nth-of-type(even) { background-color: #f2f2f2; }
+
+    </style>
+</head>
+<body>
+
+    <button id="getData">Get Data</button>
+    <ul id="response"></ul>
+
+    <script type="text/javascript">
+        document.getElementById('getData').addEventListener('click', getData);
+
+        function getData(){
+            var responseData,
+                request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {                       
+                        responseData = JSON.parse(this.response);  
+                        for (var key in responseData) {
+                            if (responseData.hasOwnProperty(key)) {
+                                var node = document.createElement("LI"),
+                                    textnode = document.createTextNode( key + ': ' + responseData[key] );
+                                
+                                node.appendChild(textnode);
+                                document.getElementById('response').appendChild(node);
+                            }
+                        }
+                    };
+                };
+            };
+            request.open("GET", 'https://api.coinpaprika.com/v1/global');
+            request.send(null);
+        }
+    </script>
+    
+</body>
+</html>
